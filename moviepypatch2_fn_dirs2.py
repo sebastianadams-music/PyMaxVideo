@@ -16,6 +16,8 @@ from datetime import datetime
 
 import sys
 
+LAYERS = 4
+
 class Logger(object):
     def __init__(self):
         self.terminal = sys.stdout
@@ -56,7 +58,7 @@ while 1:
 # directory = Path("C:/Users/SEBASTIAN/Dropbox/Active Projects/Tense Systems 2020/YouTube Clips 1+2")
 # directory = Path("C:/Users/SEBASTIAN/Dropbox/Active Projects/Tense Systems 2020/SASH/SECTION 3/YT renamed + antarctic")
  directories = [Path("C:/Users/SEBASTIAN/Dropbox/Active Projects/Tense Systems 2020/SASH/SECTION 3/YT renamed + antarctic"),]
- layers = 16
+ layers = LAYERS
  
  ext = "*mp4"
  inputs=[]
