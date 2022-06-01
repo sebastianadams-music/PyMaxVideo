@@ -15,6 +15,7 @@ corpus/AUDIO/LARGE
 # Icon must end with two \r
 Icon
 
+.venv
 
 # Thumbnails
 ._*
