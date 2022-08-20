@@ -10,7 +10,7 @@
 		}
 ,
 		"classnamespace" : "box",
-		"rect" : [ 74.0, 125.0, 1191.0, 954.0 ],
+		"rect" : [ 74.0, 92.0, 1191.0, 954.0 ],
 		"bglocked" : 0,
 		"openinpresentation" : 0,
 		"default_fontsize" : 12.0,
@@ -6328,7 +6328,7 @@
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 74.0, 151.0, 1191.0, 928.0 ],
+						"rect" : [ 74.0, 118.0, 1191.0, 928.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 1,
 						"default_fontsize" : 13.0,
@@ -6359,6 +6359,125 @@
 						"helpsidebarclosed" : 1,
 						"assistshowspatchername" : 0,
 						"boxes" : [ 							{
+								"box" : 								{
+									"id" : "obj-231",
+									"linecount" : 7,
+									"maxclass" : "comment",
+									"numinlets" : 1,
+									"numoutlets" : 0,
+									"patching_rect" : [ 469.0, 800.0, 150.0, 108.0 ],
+									"presentation" : 1,
+									"presentation_linecount" : 3,
+									"presentation_rect" : [ 469.0, 800.0, 339.0, 50.0 ],
+									"text" : "IF IT DOESN'T WORK, MAP THE TEXTURE BBALL INSIDE THE MULTIPLE OBJECT...DON'T KNOW WHY THIS MAKES IT WORK"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"id" : "obj-226",
+									"maxclass" : "comment",
+									"numinlets" : 1,
+									"numoutlets" : 0,
+									"patching_rect" : [ 853.0, 1720.0, 150.0, 21.0 ],
+									"presentation" : 1,
+									"presentation_rect" : [ 912.0, 317.0, 150.0, 21.0 ],
+									"text" : "<< read object"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"id" : "obj-212",
+									"maxclass" : "message",
+									"numinlets" : 2,
+									"numoutlets" : 1,
+									"outlettype" : [ "" ],
+									"patching_rect" : [ 811.38043679496559, 1721.0, 35.0, 23.0 ],
+									"presentation" : 1,
+									"presentation_rect" : [ 870.38043679496559, 318.0, 35.0, 23.0 ],
+									"text" : "read"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"id" : "obj-207",
+									"maxclass" : "newobj",
+									"numinlets" : 1,
+									"numoutlets" : 1,
+									"outlettype" : [ "" ],
+									"patching_rect" : [ 811.38043679496559, 1752.785046728971793, 149.0, 23.0 ],
+									"text" : "prepend jit.gl.videoplane"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"id" : "obj-113",
+									"maxclass" : "jit.pwindow",
+									"numinlets" : 1,
+									"numoutlets" : 2,
+									"outlettype" : [ "jit_matrix", "" ],
+									"patching_rect" : [ 902.0, 961.0, 80.0, 60.0 ],
+									"sync" : 1
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"id" : "obj-220",
+									"linecount" : 3,
+									"maxclass" : "message",
+									"numinlets" : 2,
+									"numoutlets" : 1,
+									"outlettype" : [ "" ],
+									"patching_rect" : [ 912.0, 813.0, 144.0, 52.0 ],
+									"text" : "/Volumes/AdamsIRCAM/CORPUS/IMG/Kazoo-Patent-540x1024.png"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"fontname" : "Arial",
+									"fontsize" : 13.0,
+									"id" : "obj-181",
+									"maxclass" : "newobj",
+									"numinlets" : 1,
+									"numoutlets" : 2,
+									"outlettype" : [ "jit_matrix", "" ],
+									"patching_rect" : [ 863.0, 917.0, 60.0, 23.0 ],
+									"text" : "jit.matrix"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"fontname" : "Arial",
+									"fontsize" : 13.0,
+									"id" : "obj-193",
+									"maxclass" : "message",
+									"numinlets" : 2,
+									"numoutlets" : 1,
+									"outlettype" : [ "" ],
+									"patching_rect" : [ 863.0, 880.0, 134.0, 23.0 ],
+									"text" : "importmovie $1, bang"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"id" : "obj-225",
+									"maxclass" : "newobj",
+									"numinlets" : 1,
+									"numoutlets" : 2,
+									"outlettype" : [ "jit_gl_texture", "" ],
+									"patching_rect" : [ 902.0, 1048.0, 155.0, 23.0 ],
+									"text" : "jit.gl.texture @name bball"
+								}
+
+							}
+, 							{
 								"box" : 								{
 									"id" : "obj-191",
 									"maxclass" : "newobj",
@@ -7716,7 +7835,7 @@
 													"numoutlets" : 1,
 													"outlettype" : [ "" ],
 													"patching_rect" : [ 85.0, 443.0, 100.0, 22.0 ],
-													"text" : "polymovie.all"
+													"text" : "polymovie.v1"
 												}
 
 											}
@@ -8261,7 +8380,7 @@
 													"numoutlets" : 1,
 													"outlettype" : [ "" ],
 													"patching_rect" : [ 26.213591873645782, 338.834946811199188, 206.310677468776703, 22.0 ],
-													"text" : "position -0.54318 2.605174 0."
+													"text" : "position 5.801553 1.18424 0."
 												}
 
 											}
@@ -9131,7 +9250,7 @@
 																					"numoutlets" : 1,
 																					"outlettype" : [ "" ],
 																					"patching_rect" : [ 85.0, 443.0, 100.0, 22.0 ],
-																					"text" : "galaxy.all"
+																					"text" : "galaxy.v1"
 																				}
 
 																			}
@@ -11129,8 +11248,8 @@
 									"maxclass" : "newobj",
 									"numinlets" : 2,
 									"numoutlets" : 0,
-									"patching_rect" : [ 187.0, 1695.0, 180.0, 23.0 ],
-									"text" : "poly~ polyvideowall_in_poly 4"
+									"patching_rect" : [ 187.0, 1695.0, 214.0, 23.0 ],
+									"text" : "poly~ polyvideo3dmodels_in_poly 4"
 								}
 
 							}
@@ -16992,6 +17111,22 @@
 							}
 , 							{
 								"patchline" : 								{
+									"destination" : [ "obj-113", 0 ],
+									"order" : 1,
+									"source" : [ "obj-181", 0 ]
+								}
+
+							}
+, 							{
+								"patchline" : 								{
+									"destination" : [ "obj-225", 0 ],
+									"order" : 0,
+									"source" : [ "obj-181", 0 ]
+								}
+
+							}
+, 							{
+								"patchline" : 								{
 									"destination" : [ "obj-187", 1 ],
 									"source" : [ "obj-183", 0 ]
 								}
@@ -17034,6 +17169,13 @@
 							}
 , 							{
 								"patchline" : 								{
+									"destination" : [ "obj-181", 0 ],
+									"source" : [ "obj-193", 0 ]
+								}
+
+							}
+, 							{
+								"patchline" : 								{
 									"destination" : [ "obj-71", 1 ],
 									"source" : [ "obj-197", 0 ]
 								}
@@ -17057,6 +17199,13 @@
 								"patchline" : 								{
 									"destination" : [ "obj-210", 0 ],
 									"source" : [ "obj-206", 0 ]
+								}
+
+							}
+, 							{
+								"patchline" : 								{
+									"destination" : [ "obj-1", 1 ],
+									"source" : [ "obj-207", 0 ]
 								}
 
 							}
@@ -17087,6 +17236,13 @@
 								"patchline" : 								{
 									"destination" : [ "obj-244", 0 ],
 									"source" : [ "obj-211", 0 ]
+								}
+
+							}
+, 							{
+								"patchline" : 								{
+									"destination" : [ "obj-207", 0 ],
+									"source" : [ "obj-212", 0 ]
 								}
 
 							}
@@ -17143,6 +17299,13 @@
 								"patchline" : 								{
 									"destination" : [ "obj-195", 0 ],
 									"source" : [ "obj-22", 0 ]
+								}
+
+							}
+, 							{
+								"patchline" : 								{
+									"destination" : [ "obj-193", 0 ],
+									"source" : [ "obj-220", 0 ]
 								}
 
 							}
@@ -17921,7 +18084,7 @@
 				"implicit" : 1
 			}
 , 			{
-				"name" : "polyvideowall_in_poly.maxpat",
+				"name" : "polyvideo3dmodels_in_poly.maxpat",
 				"bootpath" : "~/Dropbox/max_patches/PyMaxVideo",
 				"patcherrelativepath" : ".",
 				"type" : "JSON",
