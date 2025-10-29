@@ -74,10 +74,28 @@ while 1:
   print("Layer: Joining " + str(len(outputs)) + " clips.")
   clip_count.append(len(outputs))
   # combine clips from different videos
+  print("dims for sub_collage", xdim, ydim)
   sub_collage = CompositeVideoClip(outputs,size=(xdim, ydim),use_bgclip=(False))
+  audio_clips = [c.audio for c in outputs if c.audio is not None and c.audio.duration > 0.0]
   videoname = folderpath + '/tempcollage' + str(x) + '.mp4'
-  sub_collage.write_videofile(videoname,preset="ultrafast",threads=8,)
-  del sub_collage
+  if audio_clips:
+        # Create a single composite audio track
+        composite_audio = concatenate_audioclips(audio_clips)
+        
+        # Attach the audio to the video
+        sub_collage = sub_collage.set_audio(composite_audio)
+        sub_collage.write_videofile(
+        videoname,
+        # size=(xdim, ydim),
+        preset="ultrafast",
+        threads=8,
+        audio_codec="aac",
+        audio_bitrate="192k",
+        # *** NEW FIX: Explicitly set audio writing parameters ***
+        temp_audiofile='temp-audio-layer.mp3', # Use a simple temporary name
+        remove_temp=True
+    )
+        del sub_collage
   time.sleep(.001)
   #sub_collage = None
   print("clipmade")
@@ -97,7 +115,19 @@ while 1:
   #time.sleep(5)
   print(outputs)
   flatclip = VideoFileClip(videoname)#,target_resolution=(maxdim, mindim)) #.set_fps(15)
+  # 1. Extract audio from the re-loaded clip
+  flatclip_audio = flatclip.audio 
+ 
+  # 2. Create the video-only subclip
   out_flatclip = flatclip.subclip(0)
+ 
+  # 3. Attach the audio to the subclip
+  if flatclip_audio:
+    out_flatclip = out_flatclip.set_audio(flatclip_audio)
+    flatclip_audio.close() # Clean up audio source
+    del flatclip_audio
+
+  # 4. Append the audio-inclusive clip
   outputs.append(out_flatclip)
   print(outputs)
   dur_ms = "0"
@@ -164,8 +194,8 @@ while 1:
         data = data.replace("\r\n","")
         data = data.split(" ") #converts string to list containing: 
 
-        xdim = 640 #1920
-        ydim = 360 #1080
+        xdim = 1920
+        ydim = 1080
         video_length = int(data[6]) #video length in ms - will import from Max soon
         layers = int(data[5])
         min_gap = float(data[3])/1000 #the length of time between start of current clip and start of next 
@@ -179,32 +209,54 @@ while 1:
         chosen_video = int(data[0])
         x_pos = random.randint(x_minimum, x_limit)
         y_pos = random.randint(0, y_limit)
-        clip = moviepy.editor.VideoFileClip(inputs[chosen_video],target_resolution=( (16 * (dim_divider)), None),).with_position((x_pos, y_pos))#.on_color(color=(0,255,0),size=(xdim, ydim), col_opacity=(0), pos=(x_pos, y_pos))#.set_fps(15)
-        ### line above chooses a clip and resizes it and positions it
-        #clip = moviepy.editor.VideoFileClip(inputs[int(data[0])]).resize( (xdim, ydim) ) #simple clip
-        length = cliplength() #chooses a randomised value for length of clip
-        # print("dur:" + str(clip.duration) + "sel_length:" + str(length))
-        # select a random time point
-        start = round(random.uniform(0,clip.duration-length), 2) #chooses a start point for clip
+        chosen_video_path = inputs[chosen_video]
+        
+        # Load clip with video processing parameters applied (using your original working syntax)
+        # This will create the 'video_part' clip with resizing/positioning done.
+        video_part = moviepy.editor.VideoFileClip(
+            chosen_video_path,
+            target_resolution=((ydim), None)
+        ).set_position((x_pos, y_pos))
+        
+        # Load a separate, un-resized clip just to get the audio track
+        audio_clip_source = moviepy.editor.VideoFileClip(chosen_video_path)
+        clip_audio = audio_clip_source.audio
+        
+        # We keep your original logic flow for defining length/start
+        length = cliplength() 
+        
+        # Calculate start point based on the full clip's duration
+        start = round(random.uniform(0, video_part.duration - length), 2)
+
+        # 2. Create the final subclips (Video and Audio)
+        out_clip_video = video_part.subclip(start, start + length)
+        out_clip_audio = clip_audio.subclip(start, start + length)
+        
+        # 3. Combine video and audio, and set the start time
+        out_clip = out_clip_video.set_audio(out_clip_audio).set_start(duration)
+        print(out_clip, length, out_clip_video, out_clip_audio)
+        
+        # 4. Clean up temporary clips to free memory
+        clip_audio.close()
+        video_part.close()
+        out_clip_video.close()
+        out_clip_audio.close()
+        audio_clip_source.close()
+        del clip_audio
+        del video_part
+        del out_clip_video
+        del out_clip_audio
+        del audio_clip_source
 
 
-        # cut a subclip
-        out_clip = clip.subclip(start,start+length).with_start(duration)#.with_position(x_pos, y_pos)
-        del clip
-        #clip.close
-        #clip = None
-        if length < 0.06: #throws away clips short enough to break the system; should eventually come up with a better solution
-            out_clip.close
-            print("exiting this clip")
         if length > 0.06: 
          outputs.append(out_clip)
-         out_clip.close
+         out_clip.close()
          #gc.collect()
          # duration += length # adds cliplength to time elapsed (i.e. time for next clip to begin)
          advance = random.uniform(min_gap, max_gap)#random.uniform(.1, .12)
          
          duration += advance # adds a small value to time elapsed (so next clip starts without relation to length of last clip)
-
          print("layer "+ str(x) + " Vid: " + data[0] + ",  " + "Min: " + data[1] + ", " + "Max:" + data[2] + "Length: " + str(duration) + "seconds; dur: " + str(out_clip.duration) + " sel_length: " + str(length) + ", advance: " + str(advance) + str(len(outputs)) + " clips.", end='\x1b[1K\r')
          #print()
          #print()
@@ -234,12 +286,24 @@ while 1:
  clip_count.append((len(outputs)))
       # combine clips from different videos
  print(outputs)
- collage = CompositeVideoClip(outputs)
+ final_audio_clips = [c.audio for c in outputs if c.audio is not None and c.audio.duration > 0.0]
+ collage = CompositeVideoClip(outputs, size=(xdim, ydim))
  print(collage) 
+ if final_audio_clips:
+    final_composite_audio = concatenate_audioclips(final_audio_clips)
+    collage = collage.set_audio(final_composite_audio)
  now = datetime.now()
  time = now.strftime("%m%d%Y%H%M%S")
  finalvideoname = folderpath + '/moviepy_composite_out' + time + '.mp4'
- collage.write_videofile(finalvideoname,preset="medium",threads=8)
+ collage.write_videofile(
+    finalvideoname,
+    preset="medium",
+    threads=8,
+    audio_codec="aac",
+    audio_bitrate="192k", # Force a good quality bitrate
+    temp_audiofile='temp-audio-final.mp3', # Use a simple temporary name
+    remove_temp=True
+ )
  print("Script took " + str(datetime.now() - startTime))
  print("Joined " + str(sum(clip_count)) + " clips.")
  conn.close() 
